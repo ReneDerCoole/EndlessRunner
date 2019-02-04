@@ -10,11 +10,42 @@ using System.Windows.Forms;
 
 namespace EndlessRunner
 {
-	public partial class Form1 : Form
+	public partial class Main : Form
 	{
-		public Form1()
+		public Main()
 		{
 			InitializeComponent();
+
+			GameController.Main = this;
+		}
+
+		private void buttonQuit_Click_1(object sender, EventArgs e)
+		{
+			Close();
+		}
+
+		private void buttonPlay_Click(object sender, EventArgs e)
+		{
+			GameController.GameRun = true;
+			buttonPlay.Lock();
+			buttonStop.Unlock();
+		}
+
+		private void buttonStop_Click(object sender, EventArgs e)
+		{
+			GameController.GameRun = false;
+			buttonStop.Lock();
+			buttonPlay.Unlock();
+		}
+
+		private void gameTimer_Tick(object sender, EventArgs e)
+		{
+			GameController.Tick();
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			GameController.Runner.Jump();
 		}
 	}
 }
