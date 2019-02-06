@@ -31,8 +31,6 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			this.gameTimer = new System.Windows.Forms.Timer(this.components);
-			this.panelTop = new System.Windows.Forms.Panel();
-			this.panelBottum = new System.Windows.Forms.Panel();
 			this.button1 = new System.Windows.Forms.Button();
 			this.buttonStop = new EndlessRunner.CustomButton();
 			this.buttonPlay = new EndlessRunner.CustomButton();
@@ -42,24 +40,8 @@
 			// gameTimer
 			// 
 			this.gameTimer.Enabled = true;
-			this.gameTimer.Interval = 17;
+			this.gameTimer.Interval = 20;
 			this.gameTimer.Tick += new System.EventHandler(this.GameTimer_Tick);
-			// 
-			// panelTop
-			// 
-			this.panelTop.BackgroundImage = global::EndlessRunner.Properties.Resources.DirtMiddle;
-			this.panelTop.Location = new System.Drawing.Point(0, 658);
-			this.panelTop.Name = "panelTop";
-			this.panelTop.Size = new System.Drawing.Size(1500, 64);
-			this.panelTop.TabIndex = 1;
-			// 
-			// panelBottum
-			// 
-			this.panelBottum.BackgroundImage = global::EndlessRunner.Properties.Resources.DirtBottum;
-			this.panelBottum.Location = new System.Drawing.Point(0, 721);
-			this.panelBottum.Name = "panelBottum";
-			this.panelBottum.Size = new System.Drawing.Size(1500, 29);
-			this.panelBottum.TabIndex = 2;
 			// 
 			// button1
 			// 
@@ -106,7 +88,7 @@
 			this.buttonQuit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
 			this.buttonQuit.BackgroundImage = global::EndlessRunner.Properties.Resources.ButtonQuitNormal;
 			this.buttonQuit.Enable = true;
-			this.buttonQuit.Location = new System.Drawing.Point(924, 12);
+			this.buttonQuit.Location = new System.Drawing.Point(1324, 12);
 			this.buttonQuit.Name = "buttonQuit";
 			this.buttonQuit.PicClick = global::EndlessRunner.Properties.Resources.ButtonQuitClick;
 			this.buttonQuit.PicHover = global::EndlessRunner.Properties.Resources.ButtonQuitHover;
@@ -121,14 +103,11 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-			this.ClientSize = new System.Drawing.Size(1000, 750);
+			this.ClientSize = new System.Drawing.Size(1400, 750);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.buttonStop);
 			this.Controls.Add(this.buttonPlay);
 			this.Controls.Add(this.buttonQuit);
-			this.Controls.Add(this.panelBottum);
-			this.Controls.Add(this.panelTop);
 			this.DoubleBuffered = true;
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "Main";
@@ -142,8 +121,6 @@
 		private CustomButton buttonQuit;
 		private CustomButton buttonPlay;
 		private CustomButton buttonStop;
-		public System.Windows.Forms.Panel panelTop;
-		public System.Windows.Forms.Panel panelBottum;
 		public System.Windows.Forms.Button button1;
 	}
 }

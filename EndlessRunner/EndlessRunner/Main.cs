@@ -18,49 +18,7 @@ namespace EndlessRunner
 
 			GameController.Main = this;
 
-			GameController.SpriteIdle = new Image[]
-			{
-				Image.FromFile(GameController.MainPath + @"Images\Idle__000.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__001.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__002.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__003.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__004.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__005.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__006.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__007.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__008.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Idle__009.png")
-			};
-
-			GameController.SpriteRun = new Image[]
-			{
-				Image.FromFile(GameController.MainPath + @"Images\Run__000.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__001.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__002.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__003.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__004.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__005.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__006.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__007.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__008.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Run__009.png")
-			};
-
-			GameController.SpriteJump = new Image[]
-			{
-				Image.FromFile(GameController.MainPath + @"Images\Jump__000.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__001.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__002.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__003.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__004.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__005.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__006.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__007.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__008.png"),
-				Image.FromFile(GameController.MainPath + @"Images\Jump__009.png")
-			};
-
-			new Runner(50, 558, 100, 100, 1); 
+			new LevelGenerator(new Point(10, 100), 100);
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -68,7 +26,28 @@ namespace EndlessRunner
 			base.OnPaint(e);
 			Graphics g = e.Graphics;
 
-			g.DrawImage(GameController.Runner.Image, GameController.Runner.Location);
+			foreach (Point point in GameController.Platform.GetBottomImagePoints())
+			{
+				g.DrawImage(GameController.SpriteBlocks[0], point.X, point.Y, GameController.SpriteBlocks[0].Width, GameController.SpriteBlocks[0].Height);
+			}
+
+			foreach (Point point in GameController.Platform.GetTopImagePoints())
+			{
+				g.DrawImage(GameController.SpriteBlocks[1], point.X, point.Y, GameController.SpriteBlocks[1].Width, GameController.SpriteBlocks[1].Height);
+			}
+
+			foreach (Obstacle box in GameController.Obstacle)
+			{
+				g.DrawImage(GameController.SpriteObstacle[0], new Rectangle(box.Location, box.Size));
+			}
+
+			foreach (Runner runner in GameController.Runners)
+			{
+				g.DrawImage(runner.GetImage(), runner.Location);
+			}
+
+			if (GameController.Runners.Count > 0)
+				g.DrawRectangle(Pens.Blue, GameController.Runners[0].GetHitbox());
 		}
 
 		private void ButtonQuit_Click(object sender, EventArgs e)
@@ -78,40 +57,54 @@ namespace EndlessRunner
 
 		private void ButtonPlay_Click(object sender, EventArgs e)
 		{
-			GameController.GameRun = true;
-			buttonPlay.Lock();
-			buttonStop.Unlock();
+			foreach (Runner runner in GameController.Runners)
+			{
+				runner.CounterInterval = 1;
+			}
+			Play();
 		}
 
 		private void ButtonStop_Click(object sender, EventArgs e)
 		{
-			GameController.GameRun = false;
-			buttonStop.Lock();
-			buttonPlay.Unlock();
+			Stop();
 		}
 
 		private void GameTimer_Tick(object sender, EventArgs e)
 		{
 			GameController.PicTick();
 			GameController.Tick();
-
-			if (GameController.GameRun)
-			{
-				panelBottum.Location = new Point(panelBottum.Location.X - 12, panelBottum.Location.Y);
-				panelTop.Location = new Point(panelTop.Location.X - 12, panelTop.Location.Y);
-
-				if(panelBottum.Location.X < -128)
-					panelBottum.Location = new Point(panelBottum.Location.X + 128, panelBottum.Location.Y);
-				if (panelTop.Location.X < -128)
-					panelTop.Location = new Point(panelTop.Location.X + 128, panelTop.Location.Y);
-			}
-
 			Invalidate();
 		}
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			GameController.Runner.Jump();
+			if (GameController.Runners.Count != 0)
+			{
+				GameController.Runners[0].Jump();
+			}
+		}
+
+		public void Play()
+		{
+
+
+			GameController.GameRun = true;
+			buttonPlay.Lock();
+			buttonStop.Unlock();
+		}
+
+		public void Stop()
+		{
+			GameController.GameRun = false;
+			buttonStop.Lock();
+			buttonPlay.Unlock();
+		}
+
+		public void End()
+		{
+			GameController.GameRun = false;
+			buttonStop.Lock();
+			buttonPlay.Lock();
 		}
 	}
 }

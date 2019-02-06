@@ -8,39 +8,34 @@ using System.Windows.Forms;
 
 namespace EndlessRunner
 {
-	public class Runner
+	public class Runner : Entity
 	{
-		public Point Location { get; set; }
-		public Size Size { get; set; }
-		public int Score { get; set; }
 		public double Velocity { get; set; }
+		public int Score { get; set; }
 		public int PicState { get; set; }
-		public int TimerInterval { get; set; }
-		public int TimerCouter { get; set; }
-
+		public int CounterInterval { get; set; }
+		public int Couter { get; set; }
 		public bool InAir { get; set; }
 
 
 		public Runner(Point location, Size size, int timerInterval)
 		{
-			GameController.Runner = this;
+			GameController.Runners.Add(this);
 			Location = location;
 			Size = size;
-			TimerInterval = timerInterval;
+			CounterInterval = timerInterval;
 		}
 
 		public Runner(int x, int y, int width, int height, int timerInterval)
 		{
-			GameController.Runner = this;
+			GameController.Runners.Add(this);
 			Location = new Point(x, y);
 			Size = new Size(width, height);
-			TimerInterval = timerInterval;
+			CounterInterval = timerInterval;
 		}
 
-		public Image Image
+		public override Image GetImage()
 		{
-			get
-			{
 				if (GameController.GameRun || Score != 0)
 					if (InAir)
 						return GameController.SpriteJump[PicState];
@@ -48,16 +43,22 @@ namespace EndlessRunner
 						return GameController.SpriteRun[PicState];
 				else
 					return GameController.SpriteIdle[PicState];
-			}
+			
+		}
+
+		public override Rectangle GetHitbox()
+		{
+			if (InAir)
+				return new Rectangle(Location, Size);
+			else
+				return new Rectangle(Location.X, Location.Y, Size.Width, Size.Height + 5);
 		}
 
 		public void PicTick()
 		{
-			TimerCouter++;
-			if (TimerCouter >= TimerInterval)
+			if (Couter >= CounterInterval)
 			{
-				TimerCouter = 0;
-
+				Couter = 0;
 				if (PicState >= 9)
 				{
 					if (!InAir)
@@ -66,20 +67,22 @@ namespace EndlessRunner
 				else
 					PicState++;
 			}
+			else
+				Couter++;
 		}
 
-		public void Tick()
+		public override void Tick()
 		{
 			Score++;
 
 			Velocity += GameController.gravity;
-			
-			Rectangle bodyNow = new Rectangle(Location, Size);
-			Rectangle bodyFut = new Rectangle(Location, Size);
+
+			Rectangle bodyNow = GetHitbox();
+			Rectangle bodyFut = GetHitbox();
+
 			bodyFut.Offset(0, (int)Math.Round(Velocity));
 
-			Rectangle ground = GameController.PanelToRectangle(GameController.Main.panelTop);
-			ground.Offset(0, 5);
+			Rectangle ground = GameController.Platform.GetHitbox();
 
 			if (bodyFut.Bottom > ground.Top)
 			{
@@ -90,19 +93,26 @@ namespace EndlessRunner
 				}
 			}
 
+
+			foreach (Obstacle box in GameController.Obstacle)
+			{
+				if(GameController.Intersect(box.GetHitbox(), GetHitbox()))
+				{
+					GameController.Runners.Remove(this);
+				}
+			}
+
 			Location = bodyFut.Location;
 		}
 
 		public void Jump()
 		{
-			Rectangle bodyNow = new Rectangle(Location, Size);
-
-			Rectangle ground = GameController.PanelToRectangle(GameController.Main.panelTop);
-
 			if (!InAir)
+			{
 				Velocity = GameController.jumpVelocity;
-
-			InAir = true;
+				InAir = true;
+				PicState = 0;
+			}			
 		}
 	}
 }
