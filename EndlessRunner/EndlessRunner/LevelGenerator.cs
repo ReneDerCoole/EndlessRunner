@@ -9,16 +9,13 @@ namespace EndlessRunner
 {
 	public class LevelGenerator
 	{
-		public Point Spawnpoint { get; set; }
-
 		private int Counter { get; set; }
 		private int CounterInterval { get; set; }
 
-		public LevelGenerator(Point spawnpoint, int counterInterval)
+		public LevelGenerator(int counterInterval)
 		{
 			GameController.LevelGenerator = this;
-
-			Spawnpoint = spawnpoint;
+			
 			this.CounterInterval = counterInterval;
 
 			GameController.Obstacle = new List<Obstacle>();
@@ -27,7 +24,11 @@ namespace EndlessRunner
 			LoadImages();
 			SpawnPlayer();
 
-			
+			GameController.runnerIdle = GameController.Resize(GameController.SpriteIdle[0].Size, 25);
+			GameController.runnerJump = GameController.Resize(GameController.SpriteJump[0].Size, 25);
+			GameController.runnerRun = GameController.Resize(GameController.SpriteRun[0].Size, 25);
+			GameController.runnerSlide = GameController.Resize(GameController.SpriteSlide[0].Size, 25);
+
 			new Platform(660);
 		}
 
@@ -75,6 +76,20 @@ namespace EndlessRunner
 				Image.FromFile(GameController.ImagePath + "Jump__009.png")
 			};
 
+			GameController.SpriteSlide = new Image[]
+			{
+				Image.FromFile(GameController.ImagePath + "Slide__000.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__001.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__002.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__003.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__004.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__005.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__006.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__007.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__008.png"),
+				Image.FromFile(GameController.ImagePath + "Slide__009.png"),
+			};
+
 			GameController.SpriteBlocks = new Image[]
 			{
 				Image.FromFile(GameController.ImagePath + "DirtBottom.png"),
@@ -83,13 +98,14 @@ namespace EndlessRunner
 
 			GameController.SpriteObstacle = new Image[]
 			{
-				Image.FromFile(GameController.ImagePath + "Crate.png")
+				Image.FromFile(GameController.ImagePath + "Crate.png"),
+				Image.FromFile(GameController.ImagePath + "Saw.png")
 			};
 		}
 
 		private void SpawnPlayer()
 		{
-			new Runner(Spawnpoint, new Size(79, 90), 2);
+			new Runner(2, 50);
 		}
 
 		public void Tick()
@@ -97,17 +113,17 @@ namespace EndlessRunner
 			if (Counter > CounterInterval)
 			{
 				Counter = 0;
-				SpawnRandomBox();
+				SpawnRandomObstacle();
 			}
 			else
 				Counter++;
 		}
 
-		private void SpawnRandomBox()
+		private void SpawnRandomObstacle()
 		{
 			Random r = new Random();
 
-			switch (r.Next(1,4))
+			switch (r.Next(1,5))
 			{
 				case 1:
 					SpawnBoxPile(3, 5);
@@ -118,8 +134,19 @@ namespace EndlessRunner
 				case 3:
 					SpawnBoxPile(5, 3);
 					break;
+				case 4:
+					SpawnSaw(GameController.Platform.Y - GameController.runnerSlide.Height - 4, 3);
+					break;
 				default:
 					break;
+			}
+		}
+
+		private void SpawnSaw(int height, int ammount)
+		{
+			for (int i = 1; i <= ammount; i++)
+			{
+				new Obstacle(ObstacleType.CircularSaw, GameController.spawnObjectLocation, height - GameController.sawSize.Height * i);
 			}
 		}
 
@@ -146,15 +173,10 @@ namespace EndlessRunner
 
 			for (int i = 0; i < boxes.Length; i++)
 			{
-				SpawnBoxStack(GameController.spawnBarrierX + i * GameController.boxSize, boxes[i]);
-			}
-		}
-
-		private void SpawnBoxStack(int x, int height)
-		{
-			for (int i = 1; i <= height; i++)
-			{
-				new Obstacle(ObstacleType.Box ,x, GameController.Platform.Y - GameController.boxSize * i, GameController.boxSize, GameController.boxSize);
+				for (int j = 1; j <= boxes[i]; j++)
+				{
+					new Obstacle(ObstacleType.Box, GameController.spawnObjectLocation + i * GameController.blockSize.Height, GameController.Platform.Y - GameController.blockSize.Height * j - 5);
+				}
 			}
 		}
 	}

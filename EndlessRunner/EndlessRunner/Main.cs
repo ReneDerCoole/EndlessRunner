@@ -18,7 +18,7 @@ namespace EndlessRunner
 
 			GameController.Main = this;
 
-			new LevelGenerator(new Point(10, 100), 100);
+			new LevelGenerator(100);
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -28,26 +28,32 @@ namespace EndlessRunner
 
 			foreach (Point point in GameController.Platform.GetBottomImagePoints())
 			{
-				g.DrawImage(GameController.SpriteBlocks[0], point.X, point.Y, GameController.SpriteBlocks[0].Width, GameController.SpriteBlocks[0].Height);
+				g.DrawImage(GameController.SpriteBlocks[0], new Rectangle(point, GameController.blockSize));
 			}
 
 			foreach (Point point in GameController.Platform.GetTopImagePoints())
 			{
-				g.DrawImage(GameController.SpriteBlocks[1], point.X, point.Y, GameController.SpriteBlocks[1].Width, GameController.SpriteBlocks[1].Height);
+				g.DrawImage(GameController.SpriteBlocks[1], new Rectangle(point, GameController.blockSize));
 			}
 
-			foreach (Obstacle box in GameController.Obstacle)
+			foreach (Entity entity in GameController.Obstacle)
 			{
-				g.DrawImage(GameController.SpriteObstacle[0], new Rectangle(box.Location, box.Size));
+				g.DrawImage(entity.GetImage(), entity.GetHitbox());
 			}
 
 			foreach (Runner runner in GameController.Runners)
 			{
-				g.DrawImage(runner.GetImage(), runner.Location);
+				g.DrawImage(runner.GetImage(), runner.GetHitbox());
 			}
 
-			if (GameController.Runners.Count > 0)
-				g.DrawRectangle(Pens.Blue, GameController.Runners[0].GetHitbox());
+			//if (GameController.Runners.Count > 0)
+			//g.DrawRectangle(Pens.Blue, GameController.Runners[0].GetHitbox());
+
+
+			for (int i = 0; i < GameController.debugString.Length; i++)
+			{
+				g.DrawString(GameController.debugString[i], new Font(new FontFamily("Comic Sans MS"), 12), Brushes.DarkRed, new Point(300, 10 + 15 * i));
+			}
 		}
 
 		private void ButtonQuit_Click(object sender, EventArgs e)
@@ -59,7 +65,9 @@ namespace EndlessRunner
 		{
 			foreach (Runner runner in GameController.Runners)
 			{
-				runner.CounterInterval = 1;
+				runner.PicCounterInterval = 1;
+				runner.PicState = 9;
+				runner.State = State.Jump;
 			}
 			Play();
 		}
@@ -76,18 +84,8 @@ namespace EndlessRunner
 			Invalidate();
 		}
 
-		private void button1_Click(object sender, EventArgs e)
-		{
-			if (GameController.Runners.Count != 0)
-			{
-				GameController.Runners[0].Jump();
-			}
-		}
-
 		public void Play()
 		{
-
-
 			GameController.GameRun = true;
 			buttonPlay.Lock();
 			buttonStop.Unlock();

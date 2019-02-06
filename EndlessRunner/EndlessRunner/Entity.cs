@@ -10,12 +10,8 @@ namespace EndlessRunner
 	public abstract class Entity
 	{
 		public Point Location { get; set; }
-		public Size Size { get; set; }
 
-		public virtual Rectangle GetHitbox()
-		{
-			return new Rectangle(Location, Size);
-		}
+		public abstract Rectangle GetHitbox();
 
 		public abstract void Tick();
 

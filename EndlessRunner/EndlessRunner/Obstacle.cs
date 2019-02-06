@@ -13,22 +13,20 @@ namespace EndlessRunner
 	{
 		public ObstacleType Type { get; set; }
 
-		public Obstacle(ObstacleType obstacleType, Point location, Size size)
+		public Obstacle(ObstacleType obstacleType, Point location)
 		{
 			GameController.Obstacle.Add(this);
 
 			Type = obstacleType;
 			Location = location;
-			Size = size;
 		}
 
-		public Obstacle(ObstacleType obstacleType, int x, int y, int width, int height)
+		public Obstacle(ObstacleType obstacleType, int x, int y)
 		{
 			GameController.Obstacle.Add(this);
 
 			Type = obstacleType;
 			Location = new Point(x, y);
-			Size = new Size(width, height);
 		}
 
 		public override void Tick()
@@ -49,9 +47,22 @@ namespace EndlessRunner
 				case ObstacleType.Box:
 					return GameController.SpriteObstacle[0];
 				case ObstacleType.CircularSaw:
-					return null;
+					return GameController.SpriteObstacle[1];
 				default:
 					return null;
+			}
+		}
+
+		public override Rectangle GetHitbox()
+		{
+			switch (Type)
+			{
+				case ObstacleType.Box:
+					return new Rectangle(Location, GameController.blockSize);
+				case ObstacleType.CircularSaw:
+					return new Rectangle(Location, GameController.sawSize);
+				default:
+					return new Rectangle();
 			}
 		}
 	}

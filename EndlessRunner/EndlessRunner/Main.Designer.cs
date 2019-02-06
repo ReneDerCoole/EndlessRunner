@@ -31,7 +31,6 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			this.gameTimer = new System.Windows.Forms.Timer(this.components);
-			this.button1 = new System.Windows.Forms.Button();
 			this.buttonStop = new EndlessRunner.CustomButton();
 			this.buttonPlay = new EndlessRunner.CustomButton();
 			this.buttonQuit = new EndlessRunner.CustomButton();
@@ -42,16 +41,6 @@
 			this.gameTimer.Enabled = true;
 			this.gameTimer.Interval = 20;
 			this.gameTimer.Tick += new System.EventHandler(this.GameTimer_Tick);
-			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(153, 13);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(432, 23);
-			this.button1.TabIndex = 9;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// buttonStop
 			// 
@@ -104,7 +93,6 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.ClientSize = new System.Drawing.Size(1400, 750);
-			this.Controls.Add(this.button1);
 			this.Controls.Add(this.buttonStop);
 			this.Controls.Add(this.buttonPlay);
 			this.Controls.Add(this.buttonQuit);
@@ -121,7 +109,6 @@
 		private CustomButton buttonQuit;
 		private CustomButton buttonPlay;
 		private CustomButton buttonStop;
-		public System.Windows.Forms.Button button1;
 	}
 }
 

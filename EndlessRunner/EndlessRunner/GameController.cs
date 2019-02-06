@@ -18,11 +18,12 @@ namespace EndlessRunner
 		public static Platform Platform { get; set; }
 		public static List<Obstacle> Obstacle { get; set; }
 
-		static public Image[] SpriteIdle { get; set; }
-		static public Image[] SpriteRun { get; set; }
-		static public Image[] SpriteJump { get; set; }
-		static public Image[] SpriteBlocks { get; set; }
-		static public Image[] SpriteObstacle { get; set; }
+		public static Image[] SpriteIdle { get; set; }
+		public static Image[] SpriteRun { get; set; }
+		public static Image[] SpriteJump { get; set; }
+		public static Image[] SpriteSlide { get; set; }
+		public static Image[] SpriteBlocks { get; set; }
+		public static Image[] SpriteObstacle { get; set; }
 
 		public static bool GameRun { get; set; }
 
@@ -30,8 +31,18 @@ namespace EndlessRunner
 		public const double gravity = 3;
 		public static int gameSpeed = 16;
 		public static int score = 0;
-		public static int spawnBarrierX = 2000;
-		public static int boxSize = 64;
+		public static int spawnObjectLocation = 2000;
+
+		public static Size blockSize = new Size(64, 64);
+		public static Size sawSize = new Size(128, 128);
+		public static Size runnerIdle = new Size(0, 0);
+		public static Size runnerRun = new Size(0, 0);
+		public static Size runnerJump = new Size(0, 0);
+		public static Size runnerSlide = new Size(0, 0);
+
+		public static Point spawnPoint = new Point(50, 300);
+
+		public static string[] debugString = new string[10];
 
 		public static string ImagePath
 		{
@@ -41,6 +52,16 @@ namespace EndlessRunner
 		public static Rectangle PanelToRectangle(Panel panel)
 		{
 			return new Rectangle(panel.Location, panel.Size);
+		}
+
+		public static Size Resize(Size size, double percent)
+		{
+			double mod = percent / 100;
+
+			double width = size.Width * mod;
+			double height = size.Height * mod;
+
+			return new Size((int)width, (int)height);
 		}
 
 		public static bool Intersect(Rectangle r1, Rectangle r2)
@@ -88,12 +109,12 @@ namespace EndlessRunner
 					if (gameSpeed % 10 == 0)
 						foreach (Runner runner in Runners)
 						{
-							if (runner.CounterInterval > 0)
-								runner.CounterInterval--;
+							if (runner.PicCounterInterval > 0)
+								runner.PicCounterInterval--;
 						}
 				}
 
-				if(Runners.Count == 0)
+				if (Runners.Count == 0)
 				{
 					Main.End();
 				}
@@ -108,14 +129,25 @@ namespace EndlessRunner
 			}
 
 			//DEBUG
-			string debug = "";
-
-			foreach (Obstacle box in Obstacle)
+			//-----------
+			for (int i = 0; i < debugString.Length; i++)
 			{
-				debug += box.Location.X + "; ";
+				debugString[i] = i + ": bla";
 			}
 
-			Main.button1.Text = debug;
+			//if (Runners.Count > 0)
+			//	debugString[0] = Runners[0].GetHitbox().ToString();
+			//else
+			//	debugString[0] = "Tot";
+
+			//if (Runners.Count > 0)
+			//	debugString[1] = Runners[0].State.ToString();
+			//else
+			//	debugString[1] = "Tot";
+
+
+			//-----------
+			
 		}
 	}
 }

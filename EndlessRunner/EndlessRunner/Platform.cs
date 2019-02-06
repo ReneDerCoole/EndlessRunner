@@ -25,9 +25,9 @@ namespace EndlessRunner
 		{
 			List<Point> list = new List<Point>();
 
-			for (int i = X; i < 1800; i += 64)
+			for (int i = X; i < 1800; i += GameController.blockSize.Width)
 			{
-				list.Add(new Point(i, Y));
+				list.Add(new Point(i, Y - 7));
 			}
 
 			return list;
@@ -37,11 +37,11 @@ namespace EndlessRunner
 		{
 			List<Point> list = new List<Point>();
 
-			for (int j = Y + 64; j < GameController.Main.Size.Height; j += 64)
+			for (int j = Y + GameController.blockSize.Height; j < GameController.Main.Size.Height; j += GameController.blockSize.Height)
 			{
-				for (int i = X; i < 1800; i += 64)
+				for (int i = X; i < GameController.spawnObjectLocation; i += GameController.blockSize.Height)
 				{
-					list.Add(new Point(i, j));
+					list.Add(new Point(i, j - 7));
 				}
 			}
 
