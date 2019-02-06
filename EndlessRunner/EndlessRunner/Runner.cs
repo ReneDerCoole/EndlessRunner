@@ -145,9 +145,12 @@ namespace EndlessRunner
 
 		public void Slide()
 		{
-			PicState = 0;
+			
 			if (State == State.Run)
+			{
+				PicState = 0;
 				State = State.Slide;
+			}
 		}
 	}
 }

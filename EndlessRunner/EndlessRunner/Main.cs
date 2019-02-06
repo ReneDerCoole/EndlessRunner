@@ -104,5 +104,21 @@ namespace EndlessRunner
 			buttonStop.Lock();
 			buttonPlay.Lock();
 		}
+
+		private void Main_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (GameController.Runners.Count > 0)
+				switch (e.KeyChar)
+				{
+					case 'w':
+						GameController.Runners[0].Jump();
+						break;
+					case 's':
+						GameController.Runners[0].Slide();
+						break;
+					default:
+						break;
+				}
+		}
 	}
 }

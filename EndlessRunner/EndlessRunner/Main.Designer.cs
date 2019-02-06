@@ -100,6 +100,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "Main";
 			this.Text = "NinjaEscape";
+			this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Main_KeyPress);
 			this.ResumeLayout(false);
 
 		}
